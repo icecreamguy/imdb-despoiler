@@ -30,18 +30,23 @@ var despoiler = {
     // element parents both on the show page and the detailed cast page
     'character_listings' : $('td.character > div, td.char'),
     
+    'actor_episodes' : $('.filmo-episodes, .year_column'),
+    
     // Figure out where to insert the toggle button. The best element is
     // different on different pages
     'get_button_parent' : function () {
         if ($('td.castlist_label').length > 0) {
             return $('td.castlist_label');
         } else if ($('div#tn15content > h5').length > 0) { 
-            return $('div#tn15content > h5'); }
+            return $('div#tn15content > h5');
+        } else if ($('#hide-Actor').length > 0) {
+            return $('div.article > h2');
+        }
     }
 }
 
-function hide_spoilers(){
-    despoiler.character_listings.each(function(index){
+function hide_spoilers () {
+    despoiler.character_listings.each(function (index) {
         // Take a copy of the innerHTML before repacing it - it has to be put back
         // later if the toggle button is clicked
         despoiler.cast_members[index] = $(this).html();
@@ -63,14 +68,16 @@ function hide_spoilers(){
         var replacement_text = $(this).html().split('(').slice(0,-1);
         $(this).html(replacement_text);
     });
+    despoiler.actor_episodes.hide();
     despoiler.spoilers_on = false;
 }
 
-function show_spoilers(){
+function show_spoilers () {
     // Put the innerHTML back into each of the listings
-    despoiler.character_listings.each(function(index){
+    despoiler.character_listings.each(function (index) {
         $(this).html(despoiler.cast_members[index]);
     });
+    despoiler.actor_episodes.show()
     despoiler.spoilers_on = true;
 }
 
@@ -78,11 +85,12 @@ function show_spoilers(){
 // the top of the section with the spoilers, so it seems like a good place to
 // put this.
 $('<br><span class="spoiler_toggle">Toggle Spoilers</span>')
-    .appendTo(despoiler.get_button_parent()).click(function(){
-        if (despoiler.spoilers_on){
-            hide_spoilers(); }
-        else{
-            show_spoilers(); }
+    .appendTo(despoiler.get_button_parent()).click(function () {
+        if (despoiler.spoilers_on) {
+            hide_spoilers(); 
+        } else {
+            show_spoilers(); 
+        }
 });
 
 // Hide spoilers by default
