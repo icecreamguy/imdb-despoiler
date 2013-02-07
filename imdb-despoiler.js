@@ -26,8 +26,18 @@ var despoiler = {
     // Keep track of state
     'spoilers_on' : false,
     
-    // Pull this out since it's used twice
-    'character_listings' : $('td.character > div'),
+    // Pull this out since it's used twice. Matches the character spoiler
+    // element parents both on the show page and the detailed cast page
+    'character_listings' : $('td.character > div, td.char'),
+    
+    // Figure out where to insert the toggle button. The best element is
+    // different on different pages
+    'get_button_parent' : function () {
+        if ($('td.castlist_label').length > 0) {
+            return $('td.castlist_label');
+        } else if ($('div#tn15content > h5').length > 0) { 
+            return $('div#tn15content > h5'); }
+    }
 }
 
 function hide_spoilers(){
@@ -36,9 +46,9 @@ function hide_spoilers(){
         // later if the toggle button is clicked
         despoiler.cast_members[index] = $(this).html();
         
-        // For each div child to each table data element of class "character," grab 
-        // the anchor out of it's innerHTML. Replace the entire innerHTML with just 
-        // the anchor. Because the td looks like this:
+        // For each div child to each table data element of class "character," 
+        // replace the innerHTML with only what comes before the last '('
+        // character. The td looks like this:
         //
         // <div>
         //     <a onclick="(new Image()).src='someurl';" href="someurl">
@@ -46,10 +56,12 @@ function hide_spoilers(){
         //     </a>
         //     (137 episodes, 2003-2010)    
         // </div>
-        //
-        // replacing the div's innerHTML with just the anchor has the effect of
-        // removing the episode information.
-        $(this).html($(this).children('a'));
+        // 
+        // I was previously stripping out everything but the anchor, but found
+        // that some of the divs had only text. So far I haven't run into any
+        // that don't have the spoiler in the last set of parentheses
+        var replacement_text = $(this).html().split('(').slice(0,-1);
+        $(this).html(replacement_text);
     });
     despoiler.spoilers_on = false;
 }
@@ -66,7 +78,7 @@ function show_spoilers(){
 // the top of the section with the spoilers, so it seems like a good place to
 // put this.
 $('<br><span class="spoiler_toggle">Toggle Spoilers</span>')
-    .appendTo('td.castlist_label').click(function(){
+    .appendTo(despoiler.get_button_parent()).click(function(){
         if (despoiler.spoilers_on){
             hide_spoilers(); }
         else{
