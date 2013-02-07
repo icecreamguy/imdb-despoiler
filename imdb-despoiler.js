@@ -17,21 +17,24 @@
 // AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// This will keep a copy of the elements so that the effect can be easily
-// turned on and off
-var cast_members = [];
-
-// Keep track of state
-spoilers_on = false;
-
-// Pull this out since it's used twice
-var character_listings = $('td.character > div');
+// Globals container
+var despoiler = {
+    // This will keep a copy of the elements so that the effect can be easily
+    // turned on and off
+    'cast_members' : [],
+    
+    // Keep track of state
+    'spoilers_on' : false,
+    
+    // Pull this out since it's used twice
+    'character_listings' : $('td.character > div'),
+}
 
 function hide_spoilers(){
-    character_listings.each(function(index){
+    despoiler.character_listings.each(function(index){
         // Take a copy of the innerHTML before repacing it - it has to be put back
         // later if the toggle button is clicked
-        cast_members[index] = $(this).html();
+        despoiler.cast_members[index] = $(this).html();
         
         // For each div child to each table data element of class "character," grab 
         // the anchor out of it's innerHTML. Replace the entire innerHTML with just 
@@ -48,15 +51,15 @@ function hide_spoilers(){
         // removing the episode information.
         $(this).html($(this).children('a'));
     });
-    spoilers_on = false;
+    despoiler.spoilers_on = false;
 }
 
 function show_spoilers(){
     // Put the innerHTML back into each of the listings
-    character_listings.each(function(index){
-        $(this).html(cast_members[index]);
+    despoiler.character_listings.each(function(index){
+        $(this).html(despoiler.cast_members[index]);
     });
-    spoilers_on = true;
+    despoiler.spoilers_on = true;
 }
 
 // Add a button to toggle spoilers on and off. "td.castlist_label" is right at
@@ -64,7 +67,7 @@ function show_spoilers(){
 // put this.
 $('<br><span class="spoiler_toggle">Toggle Spoilers</span>')
     .appendTo('td.castlist_label').click(function(){
-        if (spoilers_on){
+        if (despoiler.spoilers_on){
             hide_spoilers(); }
         else{
             show_spoilers(); }
