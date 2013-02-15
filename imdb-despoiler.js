@@ -33,20 +33,21 @@ var despoiler = {
     'actor_episodes' : $('.filmo-episodes'),
     'date_fields' : $('span.year_column'),
 
-    'strs' : {
-        'filmography_section_keyword' : 'Filmography',
-        'tv_series_section_keyword': '(TV series)'
-    },
+    'tv_series_section_keyword': '(TV series)',
     
     // Figure out where to insert the toggle button. The best element is
-    // different on different pages
+    // different depending on the page
     'get_button_parent' : function () {
         if ($('td.castlist_label').length > 0) {
+            // This is a cast list page
             return $('td.castlist_label');
         } else if ($('div#tn15content > h5').length > 0) { 
+            // This is a cast detail page
             return $('div#tn15content > h5');
-        } else if ($('#hide-Actor').length > 0) {
-            return $('div.article > h2');
+        } else if ($('#filmography').length > 0) {
+            // This is a actor detail page. The heading we want is the only h2 in
+            // the same node
+            return $('#filmography').siblings('h2');
         }
     }
 }
@@ -79,7 +80,7 @@ function hide_spoilers () {
         $(this).hide();
         // Now filter only the TV series elements
         return $(this).parent().html().indexOf(
-            despoiler.strs.tv_series_section_keyword) >= 0;
+            despoiler.tv_series_section_keyword) >= 0;
     }).siblings('span.year_column').hide();
     despoiler.spoilers_on = false;
 }
@@ -97,14 +98,15 @@ function show_spoilers () {
 // Add a button to toggle spoilers on and off. "td.castlist_label" is right at
 // the top of the section with the spoilers, so it seems like a good place to
 // put this.
-$('<br><span class="spoiler_toggle">Toggle Spoilers</span>')
-    .appendTo(despoiler.get_button_parent()).click(function () {
+var button_parent = despoiler.get_button_parent();
+$('<br><span class="spoiler_toggle">Toggle Spoilers</span>').appendTo(
+    button_parent.click(function () {
         if (despoiler.spoilers_on) {
             hide_spoilers(); 
         } else {
             show_spoilers(); 
         }
-});
+    }));
 
 // Hide spoilers by default
 hide_spoilers();
