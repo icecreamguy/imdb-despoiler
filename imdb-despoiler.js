@@ -31,6 +31,7 @@ var despoiler = {
     'character_listings' : $('td.character > div, td.char'),
     
     'actor_episodes' : $('.filmo-episodes'),
+    'date_fields' : $('span.year_column'),
 
     'strs' : {
         'filmography_section_keyword' : 'Filmography',
@@ -88,7 +89,8 @@ function show_spoilers () {
     despoiler.character_listings.each(function (index) {
         $(this).html(despoiler.cast_members[index]);
     });
-    despoiler.actor_episodes.show()
+    despoiler.actor_episodes.show();
+    despoiler.date_fields.show();
     despoiler.spoilers_on = true;
 }
 
