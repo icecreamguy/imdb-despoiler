@@ -30,7 +30,12 @@ var despoiler = {
     // element parents both on the show page and the detailed cast page
     'character_listings' : $('td.character > div, td.char'),
     
-    'actor_episodes' : $('.filmo-episodes, .year_column'),
+    'actor_episodes' : $('.filmo-episodes'),
+
+    'strs' : {
+        'filmography_section_keyword' : 'Filmography',
+        'tv_series_section_keyword': '(TV series)'
+    },
     
     // Figure out where to insert the toggle button. The best element is
     // different on different pages
@@ -68,7 +73,13 @@ function hide_spoilers () {
         var replacement_text = $(this).html().split('(').slice(0,-1);
         $(this).html(replacement_text);
     });
-    despoiler.actor_episodes.hide();
+    despoiler.actor_episodes.filter(function () {
+        // Since we're here on the actor_episodes div, hide it.
+        $(this).hide();
+        // Now filter only the TV series elements
+        return $(this).parent().html().indexOf(
+            despoiler.strs.tv_series_section_keyword) >= 0;
+    }).siblings('span.year_column').hide();
     despoiler.spoilers_on = false;
 }
 

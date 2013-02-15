@@ -2,8 +2,8 @@
     "manifest_version": 2,
 
     "name": "imdb-despoiler",
-    "description": "View the cast list of a show on IMDB without revealing the number of seasons, episodes, or years a cast member was present",
-    "version": "1.1",
+    "description": "Browse IMDB without revealing the number of seasons, episodes, or years a cast member was present on a TV show",
+    "version": "1.2",
     "icons" : {
         "128" : "icon_128.png"
     },
